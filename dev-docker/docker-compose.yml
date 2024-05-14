@@ -1,0 +1,22 @@
+services:
+
+  postgres:
+    image: postgres
+    restart: always
+    # set shared memory limit when using docker-compose
+    shm_size: 128mb
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - type: volume
+        source: postgres-vol
+        target: /var/lib/postgresql/data
+      - type: bind
+        source: ./init/db-init.sql
+        target: /docker-entrypoint-initdb.d/db-init.sql
+
+volumes:
+  postgres-vol:
