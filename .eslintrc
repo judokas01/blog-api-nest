@@ -1,0 +1,28 @@
+{
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "ecmaVersion": 2020,
+      "sourceType": "module"
+    },
+    "extends": [
+      "prettier"
+    ],
+    "plugins": [
+      "prettier"
+    ],
+    "rules": {
+      "prettier/prettier": [
+        "error",
+        {
+          "singleQuote": true,
+          "bracketSpacing": true,
+          "trailingComma": "es5",
+          "tabWidth": 4,
+          "semi": false,
+          "arrowParens": "avoid",
+          "printWidth": 120
+        }
+      ]
+    }
+  }
+  
