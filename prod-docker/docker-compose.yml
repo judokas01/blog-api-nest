@@ -9,10 +9,18 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
-    volumes:
-      - type: volume
-        source: postgres-vol
-        target: /var/lib/postgresql/data
+    # volumes:
+    #   - type: volume
+    #     source: postgres-vol
+    #     target: /var/lib/postgresql/data
 
-volumes:
-  postgres-vol:
+  api:
+    depends_on:
+      - postgres
+    restart: always
+    build:
+      context: ../
+      dockerfile: ./prod-docker/Dockerfile
+    ports:
+      - 3000:3000
+    

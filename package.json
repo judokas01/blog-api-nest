@@ -19,12 +19,13 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "compose:up": "docker-compose -f ./dev-docker/docker-compose.yml --env-file ${ENV_FILE:-./.env} --profile local-dev up --remove-orphans",
+    "compose:prod": "docker-compose -f ./prod-docker/docker-compose.yml --env-file ${ENV_FILE:-./.env.deploy} up --remove-orphans",
     "prisma:dev": "prisma migrate dev",
     "prisma:gen": "yarn prisma generate",
     "migrate:latest": "prisma migrate deploy"
   },
   "prisma": {
-    "schema": "src/infrastructure/prisma/schema.prisma"
+    "schema": "./src/infrastructure/prisma/schema.prisma"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
