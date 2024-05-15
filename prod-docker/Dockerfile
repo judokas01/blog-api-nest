@@ -1,16 +1,10 @@
 FROM node:18.18.0-alpine
 
-COPY ["package.json", "yarn.lock", ".nvmrc","tsconfig.build.json","tsconfig.json","src", "./"]
-RUN ls
-RUN yarn install
-RUN yarn build
-RUN yarn prisma:gen
-RUN yarn migrate:latest
+COPY ./ ./app
+WORKDIR /app
+RUN yarn
+RUN yarn prisma generate --schema=./src/infrastructure/prisma/schema.prisma
+# RUN yarn migrate:deploy
 
 
-RUN yarn install --production
-WORKDIR /dist
 
-EXPOSE 3000
-
-CMD ["node", "main.js", "--enable-source-maps"]

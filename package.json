@@ -22,7 +22,11 @@
     "compose:prod": "docker-compose -f ./prod-docker/docker-compose.yml --env-file ${ENV_FILE:-./.env.deploy} up --remove-orphans",
     "prisma:dev": "prisma migrate dev",
     "prisma:gen": "yarn prisma generate",
-    "migrate:latest": "prisma migrate deploy"
+    "migrate:latest": "prisma migrate deploy",
+    "migrate:deploy": "yarn _with-deploy-env prisma migrate deploy",
+    "_with-test-env": "yarn env-cmd -f .env.test --silent",
+    "_with-local-env": "yarn env-cmd -f .env.test --silent",
+    "_with-deploy-env": "yarn env-cmd -f .env.deploy --silent"
   },
   "prisma": {
     "schema": "./src/infrastructure/prisma/schema.prisma"
@@ -46,6 +50,7 @@
     "@types/supertest": "^6.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^7.9.0",
+    "env-cmd": "^10.1.0",
     "esbuild": "^0.21.2",
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^9.0.0",
