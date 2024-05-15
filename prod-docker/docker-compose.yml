@@ -1,10 +1,14 @@
 services:
 
   postgres:
+    container_name: postgres
     image: postgres
-    restart: always
+    networks:
+      - mynetwork
     ports:
       - 5432:5432
+    expose:
+      - "5432"
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -13,13 +17,25 @@ services:
   api:
     depends_on:
       - postgres
-        # condition: service_healthy
+    networks:
+      - mynetwork
     build:
       context: ../
       dockerfile: ./prod-docker/Dockerfile
+    container_name: api
     environment:
-      POSTGRES_USER: ${DATABASE_URL}
+      DATABASE_URL: ${DATABASE_URL}
     ports:
       - 3000:3000
-    command: yarn start
-    
+    command: > 
+      sh -c "echo 'Sleep for 5 seconds to let DB start.' &&
+      sleep 5 && 
+      echo 'Appling migrations.' &&
+      yarn migrate:latest &&
+      echo 'Starting the app....' &&
+      yarn start"
+
+networks:
+  mynetwork:
+    name: mynetwork
+    driver: bridge
