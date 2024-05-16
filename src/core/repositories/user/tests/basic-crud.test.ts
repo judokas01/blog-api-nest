@@ -1,3 +1,4 @@
+import { describe, beforeAll, it, expect } from 'vitest'
 import { IUserRepository } from '..'
 import { User } from '@root/core/entities/user'
 import { HasMany } from '@root/core/entities/helpers/relationship'
