@@ -7,7 +7,6 @@ export class AppService {
         const prisma = new PrismaClient()
         await prisma.$connect()
 
-        const result = await prisma.guenuePig.findMany()
-        return JSON.stringify(result)
+        return JSON.stringify('result')
     }
 }

@@ -76,8 +76,15 @@
       "json",
       "ts"
     ],
+    "globals": {
+        "tsconfig": "tsconfig.json"
+    },
+    "moduleNameMapper": {
+      "^@core/(.*)$": "<rootDir>/$1"
+    },
+   
     "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
+    "testRegex": ".*\\.spec|test\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },

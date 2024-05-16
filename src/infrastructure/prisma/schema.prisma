@@ -13,9 +13,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id       String    @id @db.VarChar(36)
+  username String    @db.VarChar(80)
+  email    String    @db.VarChar(80)
+  password String    @db.Text
+  articles Article[]
+}
 
-model GuenuePig{
-  id          String    @id @default(cuid())
-  name        String
-  age         Int
+model Article {
+  id        String    @id @db.VarChar(36)
+  title     String    @db.VarChar(80)
+  content   String    @db.Text
+  perex     String    @db.Text
+  createdAt DateTime  @default(now())
+  author    User      @relation(fields: [authorId], references: [id])
+  authorId  String
+  Comment   Comment[]
+}
+
+model Comment {
+  id             String   @id @db.VarChar(36)
+  content        String   @db.Text
+  authorNickName String   @db.VarChar(80)
+  createdAt      DateTime @default(now())
+  upvoteScore    Int      @default(0)
+  article        Article  @relation(fields: [articleId], references: [id])
+  articleId      String
 }

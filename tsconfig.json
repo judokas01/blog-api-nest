@@ -19,6 +19,7 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
         "@root/*": ["src/*"]
-      }
-  }
+      },
+    },
+    "include": ["src"],
 }
