@@ -8,3 +8,5 @@ export interface IUserRepository extends ClearableRepository {
     findByUsername(username: User['data']['username']): Promise<User | null>
     findById(id: User['id']): Promise<User | null>
 }
+
+export const IUserRepositoryToken = Symbol('IUserRepository')

@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common'
-import { PrismaClient } from '@prisma/client'
+// import { PrismaClient } from '@prisma/client'
 import { toPrismaUserCreate, toPrismaUserUpdate, toUser } from './mappers'
 import { User, UserData } from '@root/core/entities/user'
 import { Immutable } from '@root/core/lib/typescript'
 import { IUserRepository } from '@root/core/repositories/user'
+import { PrismaService } from '@root/infrastructure/prisma/client'
 
 @Injectable()
 export class PrismaUserRepository implements IUserRepository {
-    constructor(private prisma: PrismaClient) {}
+    constructor(private prisma: PrismaService) {}
 
     insertOne = async (data: Immutable<UserData>): Promise<User> => {
         const user = await this.prisma.user.create({ data: toPrismaUserCreate(data) })

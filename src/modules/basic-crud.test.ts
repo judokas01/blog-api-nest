@@ -1,38 +1,25 @@
 import { describe, beforeAll, it, expect, afterAll } from 'vitest'
-import { TestingModule } from '@nestjs/testing'
-import { IUserRepository } from '..'
+import { Test, TestingModule } from '@nestjs/testing'
+import { UserAuthModule } from './auth-user'
 import { User } from '@root/core/entities/user'
 import { HasMany } from '@root/core/entities/helpers/relationship'
+import { IUserRepository } from '@root/core/repositories/user'
 import { PrismaUserRepository } from '@root/infrastructure/repositories/user/prisma'
-import {
-    creatingTestingContainer,
-    destroyTestingContainer,
-} from '@root/dependency/application/container/testing-container'
 
 describe('UserRepository basic CRUD', () => {
-    let userRepository: IUserRepository
-    let app: TestingModule
-
-    beforeAll(async () => {
-        const app = await creatingTestingContainer()
-
-        userRepository = app.get<IUserRepository>(PrismaUserRepository)
-
-        // some init
-        // userRepository = new UserRepository()
-    })
-
-    afterAll(async () => {
-        await destroyTestingContainer(app)
-    })
-
     it('should insert one user and retrieve it', async () => {
+        const module = await Test.createTestingModule({
+            imports: [UserAuthModule],
+        }).compile()
+
         const userToCreate = User.create({
             articles: HasMany.unloaded('user.articles'),
             email: 'email@mail',
             password: 'as',
             username: 'asga',
         })
+
+        const userRepository = module.get<IUserRepository>(PrismaUserRepository)
 
         const inserted = await userRepository.insertOne(userToCreate.data)
 

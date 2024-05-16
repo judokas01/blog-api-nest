@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common'
-import { PrismaClient } from '@prisma/client'
 import { Article, ArticleData } from '@root/core/entities/article'
 import { User } from '@root/core/entities/user'
 import { IArticleRepository } from '@root/core/repositories/article'
+import { PrismaService } from '@root/infrastructure/prisma/client'
 
 @Injectable()
 export class PrismaArticleRepository implements IArticleRepository {
-    constructor(private prisma: PrismaClient) {}
+    constructor(private prisma: PrismaService) {}
 
     insertOne = async (data: ArticleData): Promise<Article> => {}
     updateOne = async (article: Article): Promise<Article> => {}

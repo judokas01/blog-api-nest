@@ -1,21 +1,24 @@
 import { describe, beforeAll, it, expect, afterAll } from 'vitest'
 import { TestingModule } from '@nestjs/testing'
-import { IUserRepository } from '..'
+import { AuthenticateUserUseCase } from '..'
 import { User } from '@root/core/entities/user'
 import { HasMany } from '@root/core/entities/helpers/relationship'
-import { PrismaUserRepository } from '@root/infrastructure/repositories/user/prisma'
 import {
     creatingTestingContainer,
     destroyTestingContainer,
 } from '@root/dependency/application/container/testing-container'
+import { IUserRepository } from '@root/core/repositories/user'
+import { PrismaUserRepository } from '@root/infrastructure/repositories/user/prisma'
 
 describe('UserRepository basic CRUD', () => {
+    let authUseCase: AuthenticateUserUseCase
     let userRepository: IUserRepository
     let app: TestingModule
 
     beforeAll(async () => {
         const app = await creatingTestingContainer()
 
+        authUseCase = app.get<AuthenticateUserUseCase>(AuthenticateUserUseCase)
         userRepository = app.get<IUserRepository>(PrismaUserRepository)
 
         // some init
@@ -35,6 +38,8 @@ describe('UserRepository basic CRUD', () => {
         })
 
         const inserted = await userRepository.insertOne(userToCreate.data)
+
+        await authUseCase.authenticate('asga', 'as')
 
         const found = await userRepository.findById(inserted.id)
         expect(found).toMatchObject(inserted)
