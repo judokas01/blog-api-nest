@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto'
-import { HasMany } from './helpers/relationship'
+import { HasMany } from '../helpers/relationship'
 
 export class User {
     private constructor(data: UserData) {}
