@@ -1,29 +1,22 @@
-import { describe, beforeAll, it, expect, afterAll } from 'vitest'
+import { describe, beforeAll, it, expect, beforeEach } from 'vitest'
 import { TestingModule } from '@nestjs/testing'
-import {
-    creatingTestingContainer,
-    destroyTestingContainer,
-} from '@root/dependency/application/container/testing-container'
-import { IUserRepository } from '../../../../model/repositories/user'
+
 import { User } from '@root/model/entities/user'
 import { HasMany } from '@root/model/entities/helpers/relationship'
 import { UserRepository } from '@root/model/repositories/repositories/user'
+import { cleanDatabase, getTestingModule } from '@root/model/test-utils'
 
 describe('UserRepository basic CRUD', () => {
-    let userRepository: IUserRepository
+    let userRepository: UserRepository
     let app: TestingModule
 
     beforeAll(async () => {
-        const app = await creatingTestingContainer()
-
-        userRepository = app.get<IUserRepository>(UserRepository)
-
-        // some init
-        // userRepository = new UserRepository()
+        const app = await getTestingModule()
+        userRepository = app.repositories.user
     })
 
-    afterAll(async () => {
-        await destroyTestingContainer(app)
+    beforeEach(async () => {
+        await cleanDatabase(app)
     })
 
     it('should insert one user and retrieve it', async () => {

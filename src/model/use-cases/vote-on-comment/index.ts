@@ -1,8 +1,8 @@
 import { CommentData } from '@root/model/entities/comment'
-import { ICommentRepository } from '@root/model/repositories/comment'
+import { CommentRepository } from '@root/model/repositories/repositories/comment'
 
 export class VoteOnCommentUseCase {
-    constructor(private commentRepository: ICommentRepository) {}
+    constructor(private commentRepository: CommentRepository) {}
 
-    create = async (data: CommentData) => await this.commentRepository.insertOne(data)
+    // create = async (data: CommentData) => await this.commentRepository.insertOne(data)
 }

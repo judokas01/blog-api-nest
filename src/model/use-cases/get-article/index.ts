@@ -1,9 +1,11 @@
+import { Injectable } from '@nestjs/common'
 import { Article, ArticleData } from '@root/model/entities/article'
-import { IArticleRepository } from '@root/model/repositories/article'
+import { ArticleRepository } from '@root/model/repositories/repositories/article'
 
+@Injectable()
 export class GetArticleUseCase {
-    constructor(private articleRepository: IArticleRepository) {}
+    constructor(private articleRepository: ArticleRepository) {}
 
     get = async (args: Partial<ArticleData>): Promise<Article | null> =>
-        await this.articleRepository.findOne(args)
+        this.articleRepository.findOne(args)
 }

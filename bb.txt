@@ -1,0 +1,74 @@
+src/
+├── controllers/
+│   ├── rest/
+│   │   ├── ProductController.ts
+│   │   ├── OrderController.ts
+│   │   └── UserController.ts
+│   └── graphql/
+│       ├── ProductResolver.ts
+│       ├── OrderResolver.ts
+│       └── UserResolver.ts
+├── models/
+│   ├── entities/
+│   │   ├── Product.ts
+│   │   ├── Order.ts
+│   │   └── User.ts
+│   ├── repositories/
+│   │   ├── ProductRepository.ts
+│   │   ├── OrderRepository.ts
+│   │   └── UserRepository.ts
+│   ├── services/
+│   │   ├── ProductService.ts
+│   │   ├── OrderService.ts
+│   │   └── UserService.ts
+│   └── use-cases/
+│       ├── product/
+│       │   ├── CreateProductUseCase.ts
+│       │   ├── UpdateProductUseCase.ts
+│       │   └── DeleteProductUseCase.ts
+│       ├── order/
+│       │   ├── CreateOrderUseCase.ts
+│       │   ├── GetOrderDetailsUseCase.ts
+│       │   └── CancelOrderUseCase.ts
+│       └── user/
+│           ├── RegisterUserUseCase.ts
+│           ├── LoginUserUseCase.ts
+│           └── GetUserDetailsUseCase.ts
+├── interfaces/
+│   ├── rest/
+│   │   ├── ProductRoutes.ts
+│   │   ├── OrderRoutes.ts
+│   │   └── UserRoutes.ts
+│   └── graphql/
+│       ├── typeDefs/
+│       │   ├── productTypeDefs.ts
+│       │   ├── orderTypeDefs.ts
+│       │   └── userTypeDefs.ts
+│       └── resolvers/
+│           ├── ProductResolver.ts
+│           ├── OrderResolver.ts
+│           └── UserResolver.ts
+├── infrastructure/
+│   ├── database/
+│   │   ├── dbConnection.ts
+│   │   └── dbMigrations.ts
+│   ├── messaging/
+│   │   ├── MessageQueue.ts
+│   │   └── EventPublisher.ts
+│   ├── caching/
+│   │   ├── CacheClient.ts
+│   │   └── RedisClient.ts
+│   ├── http/
+│   │   ├── HttpClient.ts
+│   │   └── AxiosClient.ts
+│   ├── logging/
+│   │   └── Logger.ts
+│   └── config/
+│       ├── AppConfig.ts
+│       ├── DbConfig.ts
+│       └── ServerConfig.ts
+├── utils/
+│   ├── errorHandler.ts
+│   ├── logger.ts
+│   └── validator.ts
+└── app.ts

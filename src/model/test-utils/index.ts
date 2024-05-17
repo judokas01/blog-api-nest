@@ -9,7 +9,7 @@ import { PrismaService } from '@root/infrastructure/prisma/client'
 const REPOSITORY_DEPS = [PrismaService]
 const REPOSITORIES = [UserRepository, CommentRepository, ArticleRepository]
 
-export const getTestingModule = async (overrides: { additionalProviders?: Provider[] }) => {
+export const getTestingModule = async (overrides?: { additionalProviders?: Provider[] }) => {
     const testingApp = await Test.createTestingModule({
         providers: [...REPOSITORIES, ...REPOSITORY_DEPS, ...(overrides.additionalProviders ?? [])],
     }).compile()
