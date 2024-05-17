@@ -8,7 +8,6 @@ import { GetArticleUseCase } from '@root/model/use-cases/get-article'
 @Resolver(() => Article)
 export class ArticleResolver {
     constructor(private getArticleUseCase: GetArticleUseCase) {}
-
     @Query(() => Article, { nullable: true })
     async getArticle(
         @Args() args: GetArticleArgs,

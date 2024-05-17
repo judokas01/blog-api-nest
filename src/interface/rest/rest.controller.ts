@@ -1,11 +1,18 @@
-import { Controller, Get } from '@nestjs/common'
+import { Controller, Get, Param } from '@nestjs/common'
+import { ApiOperation, ApiResponse } from '@nestjs/swagger'
+import { GetArticleUseCase } from '@root/model/use-cases/get-article'
 
-@Controller()
+@Controller({ path: '/article' })
 export class RestController {
-    constructor() {}
+    constructor(private getArticleUseCase: GetArticleUseCase) {}
 
-    @Get('/hello')
-    getGql() {
-        return 'kvak'
+    @Get(':id')
+    @ApiOperation({ summary: 'Create cat' })
+    @ApiResponse({ status: 200, description: 'Forbidden.' })
+    async getArticleById(@Param('id') id: string) {
+        console.log({ id })
+        const article = await this.getArticleUseCase.get({ id: id })
+        console.log({ article })
+        return { a: 'vojemama', b: 'mojemama' }
     }
 }
