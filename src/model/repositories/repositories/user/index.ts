@@ -7,7 +7,7 @@ import { Immutable } from '@root/model/lib/typescript'
 import { PrismaService } from '@root/infrastructure/prisma/client'
 
 @Injectable()
-export class PrismaUserRepository implements ClearableRepository {
+export class UserRepository implements ClearableRepository {
     constructor(private prisma: PrismaService) {}
 
     insertOne = async (data: Immutable<UserData>): Promise<User> => {

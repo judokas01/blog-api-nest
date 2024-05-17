@@ -1,47 +1,79 @@
-import { describe, beforeAll, it, expect, afterAll } from 'vitest'
-import { TestingModule } from '@nestjs/testing'
+import { describe, beforeAll, it, expect, beforeEach } from 'vitest'
+import { Test, TestingModule } from '@nestjs/testing'
+import { faker } from '@faker-js/faker'
 import { AuthenticateUserUseCase } from '..'
 import { User } from '@root/model/entities/user'
 import { HasMany } from '@root/model/entities/helpers/relationship'
-import {
-    creatingTestingContainer,
-    destroyTestingContainer,
-} from '@root/dependency/application/container/testing-container'
-import { IUserRepository } from '@root/model/repositories/user'
-import { PrismaUserRepository } from '@root/model/repositories/repositories/user'
+import { UserRepository } from '@root/model/repositories/repositories/user'
+import { PrismaService } from '@root/infrastructure/prisma/client'
+import { UnauthorizedError } from '@root/model/errors'
+import { cleanDatabase, getTestingModule } from '@root/model/test-utils'
 
-describe('UserRepository basic CRUD', () => {
+describe('Authenticate user user use case', () => {
+    let testingApp: TestingModule
     let authUseCase: AuthenticateUserUseCase
-    let userRepository: IUserRepository
-    let app: TestingModule
+    let userRepository: UserRepository
 
     beforeAll(async () => {
-        const app = await creatingTestingContainer()
-
-        authUseCase = app.get<AuthenticateUserUseCase>(AuthenticateUserUseCase)
-        userRepository = app.get<IUserRepository>(PrismaUserRepository)
-
-        // some init
-        // userRepository = new UserRepository()
-    })
-
-    afterAll(async () => {
-        await destroyTestingContainer(app)
-    })
-
-    it('should insert one user and retrieve it', async () => {
-        const userToCreate = User.create({
-            articles: HasMany.unloaded('user.articles'),
-            email: 'email@mail',
-            password: 'as',
-            username: 'asga',
+        const app = await Test.createTestingModule({
+            providers: [AuthenticateUserUseCase, UserRepository, PrismaService],
+        }).compile()
+        const pp = await getTestingModule({
+            additionalProviders: [AuthenticateUserUseCase],
         })
 
-        const inserted = await userRepository.insertOne(userToCreate.data)
+        testingApp = pp.testingApp
+        userRepository = pp.repositories.user
+        authUseCase = app.get<AuthenticateUserUseCase>(AuthenticateUserUseCase)
+    })
 
-        await authUseCase.authenticate('asga', 'as')
+    beforeEach(async () => {
+        await cleanDatabase(testingApp)
+    })
 
-        const found = await userRepository.findById(inserted.id)
-        expect(found).toMatchObject(inserted)
+    it('should not throw error when password is correct', async () => {
+        const userToCreate = User.create({
+            articles: HasMany.unloaded('user.articles'),
+            email: faker.internet.email(),
+            password: faker.internet.password(),
+            username: faker.internet.userName(),
+        })
+
+        const { data } = await userRepository.insertOne(userToCreate.data)
+
+        await expect(
+            authUseCase.authenticate({ userName: data.username, password: data.password }),
+        ).resolves.not.toThrow()
+    })
+
+    it.each([
+        {
+            getCredentials: (user: User) => ({
+                userName: faker.internet.userName(),
+                password: user.data.password,
+            }),
+            text: 'when userName is not correct',
+        },
+        {
+            getCredentials: (user: User) => ({
+                userName: user.data.username,
+                password: faker.internet.password(),
+            }),
+            text: 'when password is not correct',
+        },
+    ])('should throw UnauthorizedError when $text', async ({ getCredentials }) => {
+        const userToCreate = User.create({
+            articles: HasMany.unloaded('user.articles'),
+            email: faker.internet.email(),
+            password: faker.internet.password(),
+            username: faker.internet.userName(),
+        })
+
+        const user = await userRepository.insertOne(userToCreate.data)
+        const { password, userName } = getCredentials(user)
+
+        await expect(authUseCase.authenticate({ password, userName })).rejects.toThrow(
+            UnauthorizedError,
+        )
     })
 })

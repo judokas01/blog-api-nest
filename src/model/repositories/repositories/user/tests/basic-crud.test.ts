@@ -1,13 +1,13 @@
 import { describe, beforeAll, it, expect, afterAll } from 'vitest'
 import { TestingModule } from '@nestjs/testing'
-import { IUserRepository } from '../../../../model/repositories/user'
-import { User } from '@root/model/entities/user'
-import { HasMany } from '@root/model/entities/helpers/relationship'
-import { PrismaUserRepository } from '@root/model/repositories/repositories/user'
 import {
     creatingTestingContainer,
     destroyTestingContainer,
 } from '@root/dependency/application/container/testing-container'
+import { IUserRepository } from '../../../../model/repositories/user'
+import { User } from '@root/model/entities/user'
+import { HasMany } from '@root/model/entities/helpers/relationship'
+import { UserRepository } from '@root/model/repositories/repositories/user'
 
 describe('UserRepository basic CRUD', () => {
     let userRepository: IUserRepository
@@ -16,7 +16,7 @@ describe('UserRepository basic CRUD', () => {
     beforeAll(async () => {
         const app = await creatingTestingContainer()
 
-        userRepository = app.get<IUserRepository>(PrismaUserRepository)
+        userRepository = app.get<IUserRepository>(UserRepository)
 
         // some init
         // userRepository = new UserRepository()

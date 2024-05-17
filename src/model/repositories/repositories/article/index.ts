@@ -5,7 +5,7 @@ import { User } from '@root/model/entities/user'
 import { PrismaService } from '@root/infrastructure/prisma/client'
 
 @Injectable()
-export class PrismaArticleRepository implements ClearableRepository {
+export class ArticleRepository implements ClearableRepository {
     constructor(private prisma: PrismaService) {}
 
     insertOne = async (data: ArticleData): Promise<Article> => {}
