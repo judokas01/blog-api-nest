@@ -12,7 +12,7 @@ export class ArticleResolver {
     @Query(() => Article, { nullable: true })
     async getArticle(
         @Args() args: GetArticleArgs,
-        @Context() { req }: GqlContextRequest,
+        @Context() { req: _req }: GqlContextRequest,
     ): Promise<Article | null> {
         const article = await this.getArticleUseCase.get(args)
         return toGqlArticle(article)

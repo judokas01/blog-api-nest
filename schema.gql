@@ -2,8 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-directive @upper on FIELD_DEFINITION
-
 type Article {
   content: String!
   createdAt: DateTime!

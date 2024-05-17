@@ -11,8 +11,9 @@ describe('UserRepository basic CRUD', () => {
     let app: TestingModule
 
     beforeAll(async () => {
-        const app = await getTestingModule()
-        userRepository = app.repositories.user
+        const testingModule = await getTestingModule()
+        userRepository = testingModule.repositories.user
+        app = testingModule.testingApp
     })
 
     beforeEach(async () => {

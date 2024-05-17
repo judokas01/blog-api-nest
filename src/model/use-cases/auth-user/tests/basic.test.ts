@@ -1,11 +1,10 @@
 import { describe, beforeAll, it, expect, beforeEach } from 'vitest'
-import { Test, TestingModule } from '@nestjs/testing'
+import { TestingModule } from '@nestjs/testing'
 import { faker } from '@faker-js/faker'
 import { AuthenticateUserUseCase } from '..'
 import { User } from '@root/model/entities/user'
 import { HasMany } from '@root/model/entities/helpers/relationship'
 import { UserRepository } from '@root/model/repositories/repositories/user'
-import { PrismaService } from '@root/infrastructure/prisma/client'
 import { UnauthorizedError } from '@root/model/errors'
 import { cleanDatabase, getTestingModule } from '@root/model/test-utils'
 
@@ -15,16 +14,13 @@ describe('Authenticate user user use case', () => {
     let userRepository: UserRepository
 
     beforeAll(async () => {
-        const app = await Test.createTestingModule({
-            providers: [AuthenticateUserUseCase, UserRepository, PrismaService],
-        }).compile()
         const pp = await getTestingModule({
             additionalProviders: [AuthenticateUserUseCase],
         })
 
         testingApp = pp.testingApp
         userRepository = pp.repositories.user
-        authUseCase = app.get<AuthenticateUserUseCase>(AuthenticateUserUseCase)
+        authUseCase = testingApp.get<AuthenticateUserUseCase>(AuthenticateUserUseCase)
     })
 
     beforeEach(async () => {
