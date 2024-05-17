@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { ClearableRepository } from '@root/core/repositories/common'
-import { AuthenticateUserUseCase } from '@root/core/use-cases/auth-user'
+import { ClearableRepository } from '@root/model/repositories/common'
+import { AuthenticateUserUseCase } from '@root/model/use-cases/auth-user'
 import { PrismaService } from '@root/infrastructure/prisma/client'
-import { PrismaArticleRepository } from '@root/infrastructure/repositories/article/prisma'
+import { PrismaArticleRepository } from '@root/model/repositories/repositories/article'
 import { PrismaCommentRepository } from '@root/infrastructure/repositories/comment/prisma'
-import { PrismaUserRepository } from '@root/infrastructure/repositories/user/prisma'
+import { PrismaUserRepository } from '@root/model/repositories/repositories/user'
 
 export const creatingTestingContainer = async (): Promise<TestingModule> =>
     Test.createTestingModule({

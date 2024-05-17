@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
-import { AuthenticateUserUseCase } from '@root/core/use-cases/auth-user'
-import { PrismaUserRepository } from '@root/infrastructure/repositories/user/prisma'
+import { AuthenticateUserUseCase } from '@root/model/use-cases/auth-user'
+import { PrismaUserRepository } from '@root/model/repositories/repositories/user'
 
 @Module({
     providers: [
