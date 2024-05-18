@@ -4,7 +4,9 @@ interface IBaseErrorDescription<TPayload> {
     fingerprint?: string
 }
 
-class BaseError<TPayload extends Record<string, unknown> = Record<string, unknown>> extends Error {
+export class BaseError<
+    TPayload extends Record<string, unknown> = Record<string, unknown>,
+> extends Error {
     public readonly payload: TPayload | null
     public readonly fingerprint: string | undefined
 

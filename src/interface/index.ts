@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common'
 import { GraphQLModule } from '@nestjs/graphql'
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
-import { RestController } from './rest/rest.controller'
+import { ArticleController } from './rest/article.controller'
 import { ArticleResolver } from './graphql/article/article.resolver'
 import { GetArticleUseCase } from '@root/model/use-cases/get-article'
 import { ArticleRepository } from '@root/model/repositories/repositories/article'
@@ -27,6 +27,6 @@ import { CommentRepository } from '@root/model/repositories/repositories/comment
         CommentRepository,
         PrismaService,
     ],
-    controllers: [RestController],
+    controllers: [ArticleController],
 })
 export class InterfaceModule {}

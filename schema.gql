@@ -2,11 +2,14 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""The article model"""
 type Article {
   content: String!
   createdAt: DateTime!
   id: ID!
   perex: String!
+
+  """The title of the article"""
   title: String!
 }
 
