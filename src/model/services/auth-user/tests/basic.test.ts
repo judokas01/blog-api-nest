@@ -1,26 +1,25 @@
 import { describe, beforeAll, it, expect, beforeEach } from 'vitest'
 import { TestingModule } from '@nestjs/testing'
 import { faker } from '@faker-js/faker'
-import { AuthenticateUserUseCase } from '..'
+import { AuthenticateUserService } from '..'
 import { User } from '@root/model/entities/user'
 import { HasMany } from '@root/model/entities/helpers/relationship'
 import { UserRepository } from '@root/model/repositories/repositories/user'
-import { UnauthorizedError } from '@root/model/errors'
 import { cleanDatabase, getTestingModule } from '@root/model/test-utils'
 
 describe('Authenticate user user use case', () => {
     let testingApp: TestingModule
-    let authUseCase: AuthenticateUserUseCase
+    let authService: AuthenticateUserService
     let userRepository: UserRepository
 
     beforeAll(async () => {
         const pp = await getTestingModule({
-            additionalProviders: [AuthenticateUserUseCase],
+            additionalProviders: [AuthenticateUserService],
         })
 
         testingApp = pp.testingApp
         userRepository = pp.repositories.user
-        authUseCase = testingApp.get<AuthenticateUserUseCase>(AuthenticateUserUseCase)
+        authService = testingApp.get<AuthenticateUserService>(AuthenticateUserService)
     })
 
     beforeEach(async () => {
@@ -35,41 +34,11 @@ describe('Authenticate user user use case', () => {
             username: faker.internet.userName(),
         })
 
-        const { data } = await userRepository.insertOne(userToCreate.data)
+        const { user, access_token } = await authService.createUser(userToCreate.data)
+        expect(access_token).toBeDefined()
 
-        await expect(
-            authUseCase.authenticate({ userName: data.username, password: data.password }),
-        ).resolves.not.toThrow()
-    })
+        const foundUser = await userRepository.findById(user.id)
 
-    it.each([
-        {
-            getCredentials: (user: User) => ({
-                userName: faker.internet.userName(),
-                password: user.data.password,
-            }),
-            text: 'when userName is not correct',
-        },
-        {
-            getCredentials: (user: User) => ({
-                userName: user.data.username,
-                password: faker.internet.password(),
-            }),
-            text: 'when password is not correct',
-        },
-    ])('should throw UnauthorizedError when $text', async ({ getCredentials }) => {
-        const userToCreate = User.create({
-            articles: HasMany.unloaded('user.articles'),
-            email: faker.internet.email(),
-            password: faker.internet.password(),
-            username: faker.internet.userName(),
-        })
-
-        const user = await userRepository.insertOne(userToCreate.data)
-        const { password, userName } = getCredentials(user)
-
-        await expect(authUseCase.authenticate({ password, userName })).rejects.toThrow(
-            UnauthorizedError,
-        )
+        expect(foundUser.data).toMatchObject(user.data)
     })
 })

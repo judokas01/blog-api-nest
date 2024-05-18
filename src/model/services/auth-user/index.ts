@@ -1,19 +1,20 @@
 import { Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { hashSync, compareSync } from 'bcrypt'
+import { JWT_SECRET } from './JWT_SECRET'
 import { User } from '@root/model/entities/user'
 import { InputError, UnauthorizedError } from '@root/model/errors'
 import { UserRepository } from '@root/model/repositories/repositories/user'
 import { HasMany } from '@root/model/entities/helpers/relationship'
 
 @Injectable()
-export class AuthenticateUserUseCase {
+export class AuthenticateUserService {
     constructor(
         private userRepository: UserRepository,
         private jwtService: JwtService,
     ) {}
 
-    authenticate = async (args: Pick<User['data'], 'username' | 'password'>) => {
+    getAuthToken = async (args: Pick<User['data'], 'username' | 'password'>) => {
         const { username, password } = args
         const user = await this.userRepository.findByUsername(username)
 
@@ -27,6 +28,24 @@ export class AuthenticateUserUseCase {
         const payload = { sub: user.id, username: user.data.username, email: user.data.email }
         return {
             access_token: await this.jwtService.signAsync(payload),
+        }
+    }
+
+    async getUserFromToken(token: string | undefined): Promise<User | null> {
+        if (!token) {
+            return null
+        }
+
+        try {
+            const payload: JwtPayload = await this.jwtService.verifyAsync(token, {
+                secret: JWT_SECRET,
+            })
+            // 💡 We're assigning the payload to the request object here
+            // so that we can access it in our route handlers
+            const user = await this.userRepository.findById(payload.id)
+            return user
+        } catch {
+            throw new UnauthorizedError({ message: 'Invalid token.' })
         }
     }
 
@@ -46,10 +65,15 @@ export class AuthenticateUserUseCase {
             articles: HasMany.loaded([], 'user.articles'),
         })
 
-        await this.userRepository.insertOne(newUser.data)
+        const createUser = await this.userRepository.insertOne(newUser.data)
 
-        const payload = { sub: user.id, username: user.data.username, email: user.data.email }
+        const payload: JwtPayload = {
+            id: createUser.id,
+            username: createUser.data.username,
+            email: createUser.data.email,
+        }
         return {
+            user: createUser,
             access_token: await this.jwtService.signAsync(payload),
         }
     }
@@ -57,4 +81,10 @@ export class AuthenticateUserUseCase {
     private isPasswordCorrect = (user: User, password: string) => {
         return compareSync(password, user.data.password)
     }
+}
+
+export type JwtPayload = {
+    id: string
+    username: string
+    email: string
 }
