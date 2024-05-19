@@ -75,7 +75,7 @@ export class ArticleController {
         return articles.map(toArticleItemResponse)
     }
 
-    @Get('/article:id')
+    @Get('/article/:id')
     @ApiOperation({ summary: 'Get article by its id.' })
     @ApiOkResponse({
         description: 'The user records',
@@ -104,7 +104,7 @@ export class ArticleController {
         return toArticleResponse(article)
     }
 
-    @Put('/article:id')
+    @Put('/article/:id')
     @ApiOkResponse({
         description: 'The user records',
         type: RestArticle,
@@ -122,7 +122,7 @@ export class ArticleController {
         return toArticleResponse(article)
     }
 
-    @Delete('/article:id')
+    @Delete('/article/:id')
     @ApiOkResponse({
         description: 'The user records',
         type: DeleteArticleResponse,
@@ -137,7 +137,7 @@ export class ArticleController {
         return { id }
     }
 
-    @Post('/comment')
+    @Post('/article/:id/comment')
     @ApiOkResponse({
         description: 'The user records',
         type: RestArticle,
@@ -146,6 +146,7 @@ export class ArticleController {
         @Body() { articleId, content }: CreateCommentRequest,
         @Req() req: Request,
     ): Promise<RestArticle> {
+        console.log('this')
         const user = await this.authenticate(req)
 
         const article = await this.createCommentUseCase.create({ articleId, content }, user)

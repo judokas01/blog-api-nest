@@ -1,8 +1,10 @@
+import { Injectable } from '@nestjs/common'
 import { Article } from '@root/model/entities/article'
 import { User } from '@root/model/entities/user'
 import { InputError, UnauthorizedError } from '@root/model/errors'
 import { ArticleRepository } from '@root/model/repositories/repositories/article'
 
+@Injectable()
 export class DeleteArticleUseCase {
     constructor(private articleRepository: ArticleRepository) {}
 
