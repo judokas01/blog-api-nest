@@ -27,6 +27,10 @@ import { VoteOnCommentUseCase } from '@root/model/use-cases/vote-on-comment'
             autoSchemaFile: 'schema.gql',
             sortSchema: true,
             installSubscriptionHandlers: true,
+
+            subscriptions: {
+                'subscriptions-transport-ws': true,
+            },
             context: ({ req, res }) => ({ req, res }),
         }),
         JwtMod,

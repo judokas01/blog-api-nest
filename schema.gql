@@ -77,6 +77,10 @@ type RegistrationResponse {
   user: User!
 }
 
+type Subscription {
+  commentUpvote: Article
+}
+
 """The user model"""
 type User {
   email: String!

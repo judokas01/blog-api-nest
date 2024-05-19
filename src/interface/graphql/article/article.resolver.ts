@@ -1,4 +1,5 @@
-import { Args, Query, Resolver, Context, Mutation } from '@nestjs/graphql'
+import { Args, Query, Resolver, Context, Mutation, Subscription } from '@nestjs/graphql'
+import { PubSub } from 'graphql-subscriptions'
 import { GqlContextRequest } from '../types'
 import { Article, ArticleListItem } from './response-type'
 import {
@@ -18,6 +19,8 @@ import { DeleteArticleUseCase } from '@root/model/use-cases/delete-article'
 import { AuthenticateUserService } from '@root/model/services/auth-user'
 import { CreateCommentUseCase } from '@root/model/use-cases/create-comment'
 import { VoteOnCommentUseCase } from '@root/model/use-cases/vote-on-comment'
+
+const pubSub = new PubSub()
 
 @Resolver(() => Article)
 export class ArticleResolver {
@@ -110,6 +113,13 @@ export class ArticleResolver {
     ): Promise<Article> {
         const ip = req.ip
         const article = await this.voteOnCommentUseCase.vote({ commentId, vote, ip })
+        const response = toGqlArticle(article)
+        pubSub.publish('commentUpvote', { commentUpvote: response })
         return toGqlArticle(article)
+    }
+
+    @Subscription(() => Article, { nullable: true })
+    commentUpvote() {
+        return pubSub.asyncIterator(`commentUpvote`)
     }
 }
