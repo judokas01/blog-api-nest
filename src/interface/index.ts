@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common'
 import { GraphQLModule } from '@nestjs/graphql'
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
-import { ArticleController } from './rest/article.controller'
+import { ArticleController } from './rest/article/article.controller'
 import { ArticleResolver } from './graphql/article/article.resolver'
 import { GetArticleUseCase } from '@root/model/use-cases/get-article'
 import { ArticleRepository } from '@root/model/repositories/repositories/article'

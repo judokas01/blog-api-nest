@@ -1,7 +1,7 @@
 import { Controller, Get, Param, UseFilters } from '@nestjs/common'
 import { ApiOkResponse, ApiOperation, ApiResponse } from '@nestjs/swagger'
-import { Article as RestArticle } from './response-schemas'
-import { HttpExceptionFilter } from './error-handler'
+import { HttpExceptionFilter } from '../error-handler'
+import { Article as RestArticle } from './response'
 import { GetArticleUseCase } from '@root/model/use-cases/get-article'
 import { InputNotFoundError } from '@root/model/errors'
 
