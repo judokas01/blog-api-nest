@@ -22,6 +22,20 @@ $ yarn run start:dev
 $ yarn run start:prod
 ```
 
+## Seed data
+
+```bash
+
+# dev
+$ yarn seed:dev
+
+# test
+$ yarn seed:test
+
+# "prod"
+$ yarn seed:prod
+```
+
 ## Docker
 
 ```bash
