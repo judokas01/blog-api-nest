@@ -1,5 +1,5 @@
-import { z } from 'zod'
-import { InputError } from '@root/model/errors'
+import { ZodError, z } from 'zod'
+import { InputError, UnexpectedError } from '@root/model/errors'
 import { User } from '@root/model/entities/user'
 
 export const validateLoginInput = (input: unknown) => {
@@ -7,7 +7,14 @@ export const validateLoginInput = (input: unknown) => {
         const { password, username } = loginSchema.parse(input)
         return { password, username } satisfies Pick<User['data'], 'username' | 'password'>
     } catch (error) {
-        throw new InputError({ message: 'Invalid input', payload: { error } })
+        if (error instanceof ZodError) {
+            throw new InputError({
+                message: 'Invalid login input.',
+                payload: { issues: error.issues },
+            })
+        }
+
+        throw new UnexpectedError({ message: 'Unexpected error', payload: { error } })
     }
 }
 
@@ -16,7 +23,14 @@ export const validateUserToken = (input: unknown) => {
         const token = tokenSchema.parse(input)
         return token
     } catch (error) {
-        throw new InputError({ message: 'Invalid input', payload: { error } })
+        if (error instanceof ZodError) {
+            throw new InputError({
+                message: 'Invalid token.',
+                payload: { issues: error.issues },
+            })
+        }
+
+        throw new UnexpectedError({ message: 'Unexpected error', payload: { error } })
     }
 }
 
@@ -28,7 +42,14 @@ export const validateRegisterInput = (input: unknown) => {
             'username' | 'password' | 'email'
         >
     } catch (error) {
-        throw new InputError({ message: 'Invalid input', payload: { error } })
+        if (error instanceof ZodError) {
+            throw new InputError({
+                message: 'Invalid registration input.',
+                payload: { issues: error.issues },
+            })
+        }
+
+        throw new UnexpectedError({ message: 'Unexpected error', payload: { error } })
     }
 }
 

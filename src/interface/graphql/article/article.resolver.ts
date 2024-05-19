@@ -1,6 +1,6 @@
 import { Args, Query, Resolver, Context } from '@nestjs/graphql'
 import { GqlContextRequest } from '../types'
-import { Article } from './article.model'
+import { Article } from './response-type'
 import { GetArticleArgs } from './request-type'
 import { toGqlArticle } from './mappers'
 import { GetArticleUseCase } from '@root/model/use-cases/get-article'

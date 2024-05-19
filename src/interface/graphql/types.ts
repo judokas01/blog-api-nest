@@ -1,5 +1,6 @@
+import { Response, Request } from 'express'
+
 export type GqlContextRequest = {
-    req: {
-        headers: { Authorization?: string; origin: string }
-    }
+    req: Request
+    res: Response
 }

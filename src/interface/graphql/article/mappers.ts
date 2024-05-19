@@ -1,4 +1,4 @@
-import { Article as GqlArticle } from './article.model'
+import { Article as GqlArticle } from './response-type'
 import { Article } from '@root/model/entities/article'
 
 export const toGqlArticle = (article: Article | null): GqlArticle => {

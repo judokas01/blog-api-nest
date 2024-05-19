@@ -4,6 +4,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
 import { ArticleController } from './rest/article/article.controller'
 import { ArticleResolver } from './graphql/article/article.resolver'
 import { UserController } from './rest/user/user.controller'
+import { UserResolver } from './graphql/user/user.resolver'
 import { GetArticleUseCase } from '@root/model/use-cases/get-article'
 import { ArticleRepository } from '@root/model/repositories/repositories/article'
 import { PrismaService } from '@root/infrastructure/prisma/client'
@@ -20,12 +21,14 @@ import { JwtMod } from '@root/model/services/auth-user/jwt.module'
             autoSchemaFile: 'schema.gql',
             sortSchema: true,
             installSubscriptionHandlers: true,
+            context: ({ req, res }) => ({ req, res }),
         }),
         JwtMod,
     ],
     providers: [
         AuthenticateUserService,
         ArticleResolver,
+        UserResolver,
         GetArticleUseCase,
         ArticleRepository,
         UserRepository,
