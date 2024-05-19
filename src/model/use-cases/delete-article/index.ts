@@ -16,7 +16,8 @@ export class DeleteArticleUseCase {
 
         const validatedId = validateDeleteArticleInput(id)
 
-        const originalArticle = await this.articleRepository.findById(validatedId)
+        const originalArticle =
+            await this.articleRepository.findByIdWithOrderedComments(validatedId)
         if (!originalArticle) {
             throw new InputError({
                 message: 'Article not found',

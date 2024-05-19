@@ -32,7 +32,7 @@ describe('Create comment useCase test', () => {
 
         await useCase.create({ articleId: article.id, content: testText }, user)
 
-        const found = await repositories.article.findById(article.id)
+        const found = await repositories.article.findByIdWithOrderedComments(article.id)
 
         expect(found.data.comments.get()).toHaveLength(1)
 
@@ -59,7 +59,7 @@ describe('Create comment useCase test', () => {
 
             await useCase.create({ articleId: article.id, content: testText }, getUser(user))
 
-            const found = await repositories.article.findById(article.id)
+            const found = await repositories.article.findByIdWithOrderedComments(article.id)
 
             const [comment] = found.data.comments.get()
             expect(comment.data.authorNickName).toEqual(expectedUserName(user))

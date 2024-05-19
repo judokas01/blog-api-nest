@@ -78,7 +78,7 @@ type RegistrationResponse {
 }
 
 type Subscription {
-  commentUpvote: Article
+  articleNewEvent: Article
 }
 
 """The user model"""

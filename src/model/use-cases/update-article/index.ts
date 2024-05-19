@@ -20,7 +20,7 @@ export class UpdateArticleUseCase {
 
         const { articleId, update } = validateUpdateArticleInput(args)
 
-        const originalArticle = await this.articleRepository.findById(articleId)
+        const originalArticle = await this.articleRepository.findByIdWithOrderedComments(articleId)
         if (!originalArticle) {
             throw new InputError({
                 message: 'Article not found',

@@ -74,12 +74,16 @@ export class ArticleRepository implements ClearableRepository {
         return found.map(toArticle)
     }
 
-    findById = async (id: Article['id']): Promise<Article | null> => {
+    findByIdWithOrderedComments = async (id: Article['id']): Promise<Article | null> => {
         const found = await this.prisma.article.findFirst({
             where: { id },
             include: {
                 author: true,
-                comments: true,
+                comments: {
+                    orderBy: {
+                        upvoteScore: 'desc',
+                    },
+                },
             },
         })
         return found ? toArticle(found) : null

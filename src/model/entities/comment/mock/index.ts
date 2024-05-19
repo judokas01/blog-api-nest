@@ -39,7 +39,7 @@ export const createRandomComment = async (
         ...overrides,
     })
     const createdComment = await repositories.comment.insertOne(commentToCreate)
-    const reloadedArticle = await repositories.article.findById(article.id)
+    const reloadedArticle = await repositories.article.findByIdWithOrderedComments(article.id)
 
     return { comment: createdComment, article: reloadedArticle!, user }
 }

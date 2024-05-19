@@ -103,7 +103,10 @@ export class ArticleResolver {
         const auth = req.header('Authorization')
         const user = await this.authenticateUserService.getUserFromToken(auth)
         const article = await this.createCommentUseCase.create({ articleId, content }, user)
-        return toGqlArticle(article)
+
+        const response = toGqlArticle(article)
+        pubSub.publish('articleNewEvent', { articleNewEvent: response })
+        return response
     }
 
     @Mutation(() => Article)
@@ -114,12 +117,12 @@ export class ArticleResolver {
         const ip = req.ip
         const article = await this.voteOnCommentUseCase.vote({ commentId, vote, ip })
         const response = toGqlArticle(article)
-        pubSub.publish('commentUpvote', { commentUpvote: response })
+        pubSub.publish('articleNewEvent', { articleNewEvent: response })
         return toGqlArticle(article)
     }
 
     @Subscription(() => Article, { nullable: true })
-    commentUpvote() {
-        return pubSub.asyncIterator(`commentUpvote`)
+    articleNewEvent() {
+        return pubSub.asyncIterator(`articleNewEvent`)
     }
 }

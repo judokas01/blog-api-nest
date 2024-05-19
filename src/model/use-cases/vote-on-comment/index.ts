@@ -39,7 +39,9 @@ export class VoteOnCommentUseCase {
             upvoteScore: updated.data.upvoteScore,
         })
 
-        const article = await this.articleRepository.findById(existingComment.data.article.getId())
+        const article = await this.articleRepository.findByIdWithOrderedComments(
+            existingComment.data.article.getId(),
+        )
         if (!article) {
             throw new UnexpectedError({
                 message: 'Article not found. This is logic error or data inconsistency.',

@@ -20,7 +20,7 @@ export class CreateCommentUseCase {
         user: User | null,
     ): Promise<Article> => {
         const { articleId, content } = validateCreateCommentInput(args)
-        const article = await this.articleRepository.findById(articleId)
+        const article = await this.articleRepository.findByIdWithOrderedComments(articleId)
 
         if (!article) {
             throw new InputError({
@@ -38,7 +38,7 @@ export class CreateCommentUseCase {
 
         await this.commentRepository.insertOne(commentToCreate.data)
 
-        const updatedArticle = await this.articleRepository.findById(article.id)
+        const updatedArticle = await this.articleRepository.findByIdWithOrderedComments(article.id)
         if (!article) {
             throw new UnexpectedError({
                 message: 'Article not found. This is logic error or data inconsistency.',

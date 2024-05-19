@@ -34,7 +34,7 @@ describe('Create article useCase test', () => {
 
         const article = await useCase.create(articleData, user)
 
-        const found = await repositories.article.findById(article.id)
+        const found = await repositories.article.findByIdWithOrderedComments(article.id)
 
         expect(found).not.toBeNull()
         expect(found.id).toEqual(article.id)

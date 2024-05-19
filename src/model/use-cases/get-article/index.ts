@@ -9,7 +9,7 @@ export class GetArticleUseCase {
 
     getById = async (id: Article['id']): Promise<Article | null> => {
         const validatedId = validateGetIdInput(id)
-        const article = this.articleRepository.findById(validatedId)
+        const article = this.articleRepository.findByIdWithOrderedComments(validatedId)
         return article
     }
 }
