@@ -1,13 +1,12 @@
 import { describe, beforeAll, it, expect, beforeEach } from 'vitest'
 import { TestingModule } from '@nestjs/testing'
-import { faker } from '@faker-js/faker'
 import { omit } from 'ramda'
 import { AuthenticateUserService } from '..'
 import { User } from '@root/model/entities/user'
-import { HasMany } from '@root/model/entities/helpers/relationship'
 import { UserRepository } from '@root/model/repositories/repositories/user'
 import { cleanDatabase, getTestingModule } from '@root/model/test-utils'
 import { InputError, UnauthorizedError } from '@root/model/errors'
+import { userMock } from '@root/model/entities/user/mock'
 
 describe('Authenticate user user service', () => {
     let testingApp: TestingModule
@@ -29,12 +28,7 @@ describe('Authenticate user user service', () => {
     })
 
     it('should create new user', async () => {
-        const userToCreate = User.create({
-            articles: HasMany.unloaded('user.articles'),
-            email: faker.internet.email(),
-            password: faker.internet.password(),
-            username: faker.internet.userName(),
-        })
+        const userToCreate = User.create(userMock.random.data())
 
         const { user, access_token } = await authService.createUser(userToCreate.data)
         expect(access_token).toBeDefined()
@@ -45,12 +39,7 @@ describe('Authenticate user user service', () => {
     })
 
     it('should authenticate user by its original password', async () => {
-        const userToCreate = User.create({
-            articles: HasMany.unloaded('user.articles'),
-            email: faker.internet.email(),
-            password: faker.internet.password(),
-            username: faker.internet.userName(),
-        })
+        const userToCreate = User.create(userMock.random.data())
 
         await authService.createUser(userToCreate.data)
 
@@ -63,12 +52,7 @@ describe('Authenticate user user service', () => {
     })
 
     it('should authenticate user by auth token', async () => {
-        const userToCreate = User.create({
-            articles: HasMany.unloaded('user.articles'),
-            email: faker.internet.email(),
-            password: faker.internet.password(),
-            username: faker.internet.userName(),
-        })
+        const userToCreate = User.create(userMock.random.data())
 
         const { access_token } = await authService.createUser(userToCreate.data)
 
@@ -90,12 +74,7 @@ describe('Authenticate user user service', () => {
     })
 
     it('should throw error, when username already exits', async () => {
-        const userToCreate = User.create({
-            articles: HasMany.unloaded('user.articles'),
-            email: faker.internet.email(),
-            password: faker.internet.password(),
-            username: faker.internet.userName(),
-        })
+        const userToCreate = User.create(userMock.random.data())
 
         await userRepository.insertOne(userToCreate.data)
 
