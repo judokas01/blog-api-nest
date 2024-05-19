@@ -1,4 +1,5 @@
 import { describe, beforeAll, it, expect, beforeEach, afterAll } from 'vitest'
+import { Article as RestArticle } from '@root/interface/rest/article/response'
 import {
     getTestingInterfaceApp,
     TestingRepositories,
@@ -23,20 +24,19 @@ describe('Authenticate user user use case', () => {
         await testingApp.stop()
     })
 
-    it('should retrieve article', async () => {
+    it('should not throw error when password is correct', async () => {
         const { article } = await articleMock.random.createOne(undefined, repositories)
 
-        const res = await testingApp.gqlQuery(
-            'getArticleById',
-            responseQuery,
-            { id: { type: 'ID!', value: article.id } },
-            {},
-        )
+        const res = await testingApp.httpReq().get(`/article/${article.id}`)
 
-        expect(res.body.data.getArticleById.id).toEqual(article.id)
+        expect(res.body).toMatchObject({
+            authorUsername: expect.any(String),
+            comments: expect.any(Array),
+            content: expect.any(String),
+            createdAt: expect.any(String),
+            id: expect.any(String),
+            perex: expect.any(String),
+            title: expect.any(String),
+        } satisfies RestArticle)
     })
 })
-
-const responseQuery = `{
-    id
-  }`

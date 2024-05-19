@@ -30,7 +30,11 @@ describe('Authenticate user user service', () => {
     it('should create new user', async () => {
         const userToCreate = User.create(userMock.random.data())
 
-        const { user, accessToken } = await authService.createUser(userToCreate.data)
+        const { user, accessToken } = await authService.createUser({
+            email: userToCreate.data.email,
+            password: userToCreate.data.password,
+            username: userToCreate.data.username,
+        })
         expect(accessToken).toBeDefined()
 
         const foundUser = await userRepository.findById(user.id)
@@ -41,7 +45,11 @@ describe('Authenticate user user service', () => {
     it('should authenticate user by its original password', async () => {
         const userToCreate = User.create(userMock.random.data())
 
-        await authService.createUser(userToCreate.data)
+        await authService.createUser({
+            email: userToCreate.data.email,
+            password: userToCreate.data.password,
+            username: userToCreate.data.username,
+        })
 
         const token = await authService.getAuthToken({
             password: userToCreate.data.password,
@@ -54,7 +62,11 @@ describe('Authenticate user user service', () => {
     it('should authenticate user by auth token', async () => {
         const userToCreate = User.create(userMock.random.data())
 
-        const { accessToken } = await authService.createUser(userToCreate.data)
+        const { accessToken } = await authService.createUser({
+            email: userToCreate.data.email,
+            password: userToCreate.data.password,
+            username: userToCreate.data.username,
+        })
 
         const user = await authService.getUserFromToken(accessToken)
 
