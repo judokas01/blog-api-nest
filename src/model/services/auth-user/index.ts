@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { hashSync, compareSync } from 'bcrypt'
-import { JWT_SECRET } from './JWT_SECRET'
+import { JWT_SECRET } from './jwt.module'
+import { validateLoginInput, validateRegisterInput, validateUserToken } from './validations'
 import { User } from '@root/model/entities/user'
 import { InputError, UnauthorizedError } from '@root/model/errors'
 import { UserRepository } from '@root/model/repositories/repositories/user'
@@ -14,8 +15,8 @@ export class AuthenticateUserService {
         private jwtService: JwtService,
     ) {}
 
-    getAuthToken = async (args: Pick<User['data'], 'username' | 'password'>) => {
-        const { username, password } = args
+    getAuthToken = async (args?: Pick<User['data'], 'username' | 'password'>) => {
+        const { username, password } = validateLoginInput(args)
         const user = await this.userRepository.findByUsername(username)
 
         if (!user || !this.isPasswordCorrect(user, password)) {
@@ -36,8 +37,10 @@ export class AuthenticateUserService {
             return null
         }
 
+        const parsedToken = validateUserToken(token)
+
         try {
-            const payload: JwtPayload = await this.jwtService.verifyAsync(token, {
+            const payload: JwtPayload = await this.jwtService.verifyAsync(parsedToken, {
                 secret: JWT_SECRET,
             })
             // 💡 We're assigning the payload to the request object here
@@ -50,7 +53,7 @@ export class AuthenticateUserService {
     }
 
     createUser = async (args: Pick<User['data'], 'username' | 'password' | 'email'>) => {
-        const { username, password, email } = args
+        const { username, password, email } = validateRegisterInput(args)
         const user = await this.userRepository.findByUsername(username)
         if (user) {
             throw new InputError({ message: 'User already exists.', payload: { username } })

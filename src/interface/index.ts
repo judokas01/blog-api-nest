@@ -3,11 +3,14 @@ import { GraphQLModule } from '@nestjs/graphql'
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
 import { ArticleController } from './rest/article/article.controller'
 import { ArticleResolver } from './graphql/article/article.resolver'
+import { UserController } from './rest/user/user.controller'
 import { GetArticleUseCase } from '@root/model/use-cases/get-article'
 import { ArticleRepository } from '@root/model/repositories/repositories/article'
 import { PrismaService } from '@root/infrastructure/prisma/client'
 import { UserRepository } from '@root/model/repositories/repositories/user'
 import { CommentRepository } from '@root/model/repositories/repositories/comment'
+import { AuthenticateUserService } from '@root/model/services/auth-user'
+import { JwtMod } from '@root/model/services/auth-user/jwt.module'
 
 @Module({
     imports: [
@@ -18,8 +21,10 @@ import { CommentRepository } from '@root/model/repositories/repositories/comment
             sortSchema: true,
             installSubscriptionHandlers: true,
         }),
+        JwtMod,
     ],
     providers: [
+        AuthenticateUserService,
         ArticleResolver,
         GetArticleUseCase,
         ArticleRepository,
@@ -27,6 +32,6 @@ import { CommentRepository } from '@root/model/repositories/repositories/comment
         CommentRepository,
         PrismaService,
     ],
-    controllers: [ArticleController],
+    controllers: [ArticleController, UserController],
 })
 export class InterfaceModule {}
