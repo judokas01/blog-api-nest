@@ -19,11 +19,10 @@ export class ArticleController {
     @ApiResponse({ status: 404, description: 'User not found' })
     async getArticleById(@Param('id') id: string): Promise<RestArticle | null> {
         console.log({ id })
-        const article = await this.getArticleUseCase.get({ id: id })
+        const article = await this.getArticleUseCase.getById(id)
         if (!article) {
             throw new InputNotFoundError({ message: 'Article not found', payload: { id } })
         }
-        console.log({ article })
         return article.data
     }
 }

@@ -23,13 +23,14 @@ export const toPrismaArticleCreate = (data: Immutable<ArticleData>): Prisma.Arti
     createdAt: data.createdAt,
 })
 
-export const toPrismaArticleUpdate = (article: Article): Prisma.ArticleUpdateArgs => ({
+export const toPrismaArticleUpdate = (
+    articleId: Article['id'],
+    update: Partial<Pick<ArticleData, 'content' | 'perex' | 'title'>>,
+): Prisma.ArticleUpdateArgs => ({
     data: {
-        content: article.data.content,
-        id: article.data.id,
-        perex: article.data.perex,
-        title: article.data.title,
-        createdAt: article.data.createdAt,
+        content: update.content,
+        perex: update.perex,
+        title: update.title,
     },
-    where: { id: article.id },
+    where: { id: articleId },
 })

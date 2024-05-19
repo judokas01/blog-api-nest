@@ -4,6 +4,29 @@
 
 """The article model"""
 type Article {
+  authorUsername: String!
+  comments: [ArticleComment!]
+  content: String!
+  createdAt: DateTime!
+  id: ID!
+  perex: String!
+
+  """The title of the article"""
+  title: String!
+}
+
+"""The article comment"""
+type ArticleComment {
+  authorUsername: String!
+  content: String!
+  createdAt: DateTime!
+  id: ID!
+  upvoteScore: Float!
+}
+
+"""The article model"""
+type ArticleListItem {
+  authorUsername: String!
   content: String!
   createdAt: DateTime!
   id: ID!
@@ -18,12 +41,26 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+input GetManyArticlesFilters {
+  authorUsername: String!
+  createdAfter: DateTime!
+  createdBefore: DateTime!
+  perex: String!
+  title: String!
+}
+
+input GetManyArticlesPagination {
+  limit: Float!
+  offset: Float!
+}
+
 type Mutation {
   register(email: String!, password: String!, username: String!): RegistrationResponse!
 }
 
 type Query {
-  getArticle(id: ID!): Article
+  getArticleById(id: ID!): Article
+  getManyArticles(filters: GetManyArticlesFilters, pagination: GetManyArticlesPagination): [ArticleListItem!]!
   logIn(password: String!, username: String!): UserAuth!
 }
 

@@ -64,7 +64,7 @@ export class HasMany<T extends EntityLike<T>> {
         return new HasMany<never>(null, path)
     }
 
-    static loaded<T extends EntityLike<T>>(entities: T[], path: string) {
+    static loaded<T extends EntityLike<T>>(path: string, entities: T[]) {
         return new HasMany<T>(entities, path)
     }
 

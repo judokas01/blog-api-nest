@@ -12,6 +12,7 @@ import { UserRepository } from '@root/model/repositories/repositories/user'
 import { CommentRepository } from '@root/model/repositories/repositories/comment'
 import { AuthenticateUserService } from '@root/model/services/auth-user'
 import { JwtMod } from '@root/model/services/auth-user/jwt.module'
+import { GetManyArticlesUseCase } from '@root/model/use-cases/get-many-articles'
 
 @Module({
     imports: [
@@ -26,6 +27,7 @@ import { JwtMod } from '@root/model/services/auth-user/jwt.module'
         JwtMod,
     ],
     providers: [
+        GetManyArticlesUseCase,
         AuthenticateUserService,
         ArticleResolver,
         UserResolver,

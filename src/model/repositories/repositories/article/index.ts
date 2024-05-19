@@ -15,18 +15,43 @@ export class ArticleRepository implements ClearableRepository {
         return toArticle(created)
     }
 
-    updateOne = async (article: Article): Promise<Article> => {
-        const created = await this.prisma.article.update(toPrismaArticleUpdate(article))
-        return toArticle(created)
+    updateOne = async (
+        articleId: Article['id'],
+        update: Partial<Pick<ArticleData, 'content' | 'perex' | 'title'>>,
+    ): Promise<Article> => {
+        const updated = await this.prisma.article.update(toPrismaArticleUpdate(articleId, update))
+        return toArticle(updated)
     }
 
     deleteOne = async (id: Article['id']): Promise<void> => {
         await this.prisma.article.delete({ where: { id } })
     }
 
-    findOne = async (data: Partial<ArticleData>): Promise<Article | null> => {
-        const found = await this.prisma.article.findFirst({ where: { ...data, author: undefined } })
-        return found ? toArticle(found) : null
+    findMany = async (args: FindManyArticlesArgs): Promise<Article[]> => {
+        const { filters, pagination } = args
+        const found = await this.prisma.article.findMany({
+            where: {
+                author: {
+                    username: filters?.authorUsername,
+                },
+                title: {
+                    contains: filters?.title,
+                },
+                perex: {
+                    contains: filters?.perex,
+                },
+                createdAt: {
+                    gte: filters?.createdAfter,
+                    lte: filters?.createdBefore,
+                },
+            },
+            skip: pagination?.offset,
+            take: pagination?.limit,
+            orderBy: {
+                pk: 'desc',
+            },
+        })
+        return found.map(toArticle)
     }
 
     findById = async (id: Article['id']): Promise<Article | null> => {
@@ -41,5 +66,19 @@ export class ArticleRepository implements ClearableRepository {
 
     clear = async (): Promise<void> => {
         await this.prisma.article.deleteMany()
+    }
+}
+
+export type FindManyArticlesArgs = {
+    filters?: {
+        title?: string
+        perex?: string
+        authorUsername?: string
+        createdBefore?: Date
+        createdAfter?: Date
+    }
+    pagination?: {
+        limit: number
+        offset: number
     }
 }

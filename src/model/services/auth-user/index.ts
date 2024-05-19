@@ -65,7 +65,7 @@ export class AuthenticateUserService {
             username,
             password: hashedPassword,
             email,
-            articles: HasMany.loaded([], 'user.articles'),
+            articles: HasMany.loaded('user.articles', []),
         })
 
         const createUser = await this.userRepository.insertOne(newUser.data)

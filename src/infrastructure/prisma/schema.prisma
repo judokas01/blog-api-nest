@@ -15,6 +15,7 @@ datasource db {
 
 model User {
   id       String    @id @db.VarChar(36)
+  pk       Int       @unique @default(autoincrement())
   username String    @db.VarChar(80)
   email    String    @db.VarChar(80)
   password String    @db.Text
@@ -23,6 +24,7 @@ model User {
 
 model Article {
   id        String    @id @db.VarChar(36)
+  pk        Int       @unique @default(autoincrement())
   title     String    @db.VarChar(80)
   content   String    @db.Text
   perex     String    @db.Text
@@ -34,10 +36,12 @@ model Article {
 
 model Comment {
   id             String   @id @db.VarChar(36)
+  pk             Int      @unique @default(autoincrement())
   content        String   @db.Text
   authorNickName String   @db.VarChar(80)
   createdAt      DateTime @default(now())
   upvoteScore    Int      @default(0)
+  upvoteHosts    String   @db.Text
   article        Article  @relation(fields: [articleId], references: [id])
   articleId      String
 }
