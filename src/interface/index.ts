@@ -13,6 +13,11 @@ import { CommentRepository } from '@root/model/repositories/repositories/comment
 import { AuthenticateUserService } from '@root/model/services/auth-user'
 import { JwtMod } from '@root/model/services/auth-user/jwt.module'
 import { GetManyArticlesUseCase } from '@root/model/use-cases/get-many-articles'
+import { CreateArticleUseCase } from '@root/model/use-cases/create-article'
+import { UpdateArticleUseCase } from '@root/model/use-cases/update-article'
+import { DeleteArticleUseCase } from '@root/model/use-cases/delete-article'
+import { CreateCommentUseCase } from '@root/model/use-cases/create-comment'
+import { VoteOnCommentUseCase } from '@root/model/use-cases/vote-on-comment'
 
 @Module({
     imports: [
@@ -28,6 +33,12 @@ import { GetManyArticlesUseCase } from '@root/model/use-cases/get-many-articles'
     ],
     providers: [
         GetManyArticlesUseCase,
+        CreateArticleUseCase,
+        UpdateArticleUseCase,
+        DeleteArticleUseCase,
+        AuthenticateUserService,
+        CreateCommentUseCase,
+        VoteOnCommentUseCase,
         AuthenticateUserService,
         ArticleResolver,
         UserResolver,

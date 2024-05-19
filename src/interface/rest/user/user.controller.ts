@@ -1,5 +1,5 @@
 import { Body, Controller, Post, Res, UseFilters } from '@nestjs/common'
-import { ApiOkResponse, ApiOperation, ApiResponse } from '@nestjs/swagger'
+import { ApiOkResponse, ApiOperation } from '@nestjs/swagger'
 import { Response } from 'express'
 import { HttpExceptionFilter } from '../error-handler'
 import { AuthToken, SingInResponse, headerResponse, toUserRestResponse } from './response'
@@ -7,7 +7,6 @@ import { LoginInput, RegisterInput } from './request'
 import { AuthenticateUserService } from '@root/model/services/auth-user'
 
 @UseFilters(HttpExceptionFilter)
-@ApiResponse({ status: 404, description: 'User not found' })
 @Controller({ path: '/auth' })
 export class UserController {
     constructor(private authService: AuthenticateUserService) {}

@@ -1,6 +1,6 @@
 import { Args, Query, Resolver, Context, Mutation } from '@nestjs/graphql'
 import { GqlContextRequest } from '../types'
-import { Article, ArticleComment, ArticleListItem } from './response-type'
+import { Article, ArticleListItem } from './response-type'
 import {
     ArticleId,
     CreateCommentArgs,
@@ -17,6 +17,7 @@ import { UpdateArticleUseCase } from '@root/model/use-cases/update-article'
 import { DeleteArticleUseCase } from '@root/model/use-cases/delete-article'
 import { AuthenticateUserService } from '@root/model/services/auth-user'
 import { CreateCommentUseCase } from '@root/model/use-cases/create-comment'
+import { VoteOnCommentUseCase } from '@root/model/use-cases/vote-on-comment'
 
 @Resolver(() => Article)
 export class ArticleResolver {
@@ -28,7 +29,9 @@ export class ArticleResolver {
         private deleteArticleUseCase: DeleteArticleUseCase,
         private authenticateUserService: AuthenticateUserService,
         private createCommentUseCase: CreateCommentUseCase,
+        private voteOnCommentUseCase: VoteOnCommentUseCase,
     ) {}
+
     @Query(() => Article, { nullable: true })
     async getArticleById(
         @Args() { id }: ArticleId,
@@ -89,22 +92,24 @@ export class ArticleResolver {
         await this.deleteArticleUseCase.delete(id, user)
     }
 
-    @Mutation(() => ArticleComment)
+    @Mutation(() => Article)
     async createComment(
         @Args() { content, articleId }: CreateCommentArgs,
         @Context() { req }: GqlContextRequest,
-    ): Promise<ArticleComment> {
+    ): Promise<Article> {
         const auth = req.header('Authorization')
         const user = await this.authenticateUserService.getUserFromToken(auth)
-        const comment = await this.createCommentUseCase.create({ articleId, content }, user)
+        const article = await this.createCommentUseCase.create({ articleId, content }, user)
+        return toGqlArticle(article)
     }
 
-    @Mutation(() => ArticleComment)
+    @Mutation(() => Article)
     async voteOnComment(
         @Args() { commentId, vote }: VoteOnCommentArgs,
         @Context() { req }: GqlContextRequest,
-    ): Promise<ArticleComment> {
+    ): Promise<Article> {
         const ip = req.ip
-        await this.deleteArticleUseCase.delete(id, user)
+        const article = await this.voteOnCommentUseCase.vote({ commentId, vote, ip })
+        return toGqlArticle(article)
     }
 }

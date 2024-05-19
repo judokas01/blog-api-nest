@@ -19,15 +19,26 @@ export class Comment implements Clonable<Comment> {
         return this.comment
     }
 
-    upVote = (): Comment => {
+    upVote = (ip: string): Comment => {
         const clone = this.clone()
         clone.comment.upvoteScore += 1
-        return clone
+        return clone.addIpToHosts(ip)
     }
 
-    downVote = (): Comment => {
+    downVote = (ip: string): Comment => {
         const clone = this.clone()
         clone.comment.upvoteScore -= 1
+        return clone.addIpToHosts(ip)
+    }
+
+    isIpPresent = (ip: string): boolean => {
+        const uniqueVoteHosts = new Set(this.comment.uniqueVoteHosts)
+        return uniqueVoteHosts.has(ip)
+    }
+
+    private addIpToHosts = (ip: string): Comment => {
+        const clone = this.clone()
+        clone.comment.uniqueVoteHosts.push(ip)
         return clone
     }
 
@@ -40,6 +51,6 @@ export type CommentData = {
     content: string
     createdAt: Date
     upvoteScore: number
-    uniqueHosts: string[]
+    uniqueVoteHosts: string[]
     article: HasOne<Article>
 }

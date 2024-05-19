@@ -78,7 +78,7 @@ export class CreateCommentArgs {
 @ArgsType()
 export class VoteOnCommentArgs {
     @Field()
-    vote: number
+    vote: 1 | -1
 
     @Field()
     commentId: string

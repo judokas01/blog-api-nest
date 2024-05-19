@@ -11,8 +11,13 @@ export class ArticleRepository implements ClearableRepository {
     constructor(private prisma: PrismaService) {}
 
     insertOne = async (data: Immutable<ArticleData>): Promise<Article> => {
-        const created = await this.prisma.article.create({ data: toPrismaArticleCreate(data) })
-        return toArticle(created)
+        try {
+            const created = await this.prisma.article.create({ data: toPrismaArticleCreate(data) })
+            return toArticle(created)
+        } catch (error) {
+            console.error(error)
+            throw error
+        }
     }
 
     updateOne = async (

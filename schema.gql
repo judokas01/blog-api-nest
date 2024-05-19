@@ -10,8 +10,6 @@ type Article {
   createdAt: DateTime!
   id: ID!
   perex: String!
-
-  """The title of the article"""
   title: String!
 }
 
@@ -27,12 +25,10 @@ type ArticleComment {
 """The article model"""
 type ArticleListItem {
   authorUsername: String!
-  content: String!
+  comments: [ArticleComment!]
   createdAt: DateTime!
   id: ID!
   perex: String!
-
-  """The title of the article"""
   title: String!
 }
 
@@ -55,7 +51,18 @@ input GetManyArticlesPagination {
 }
 
 type Mutation {
+  createArticle(
+    content: String!
+    perex: String!
+
+    """The title of the article"""
+    title: String!
+  ): Article!
+  createComment(articleId: ID!, content: String!): Article!
+  deleteArticle(id: ID!): Article!
   register(email: String!, password: String!, username: String!): RegistrationResponse!
+  updateArticle(content: String, id: ID!, perex: String, title: String): Article!
+  voteOnComment(commentId: String!, vote: Float!): Article!
 }
 
 type Query {

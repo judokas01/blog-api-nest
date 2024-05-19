@@ -19,18 +19,18 @@ export const toGqlArticle = (article: Article | null): GqlArticle => {
 }
 
 export const toGqlArticleListItem = (article: Article): ArticleListItem => {
-    const { content, createdAt, id, perex, title, author } = article.data
+    const { createdAt, id, perex, title, author } = article.data
     return {
-        content,
         createdAt,
         id,
         perex,
         title,
         authorUsername: author.get().data.username,
+        comments: article.data.comments.get().map(toArticleComment),
     }
 }
 
-const toArticleComment = (comment: Readonly<Comment>): ArticleComment => ({
+export const toArticleComment = (comment: Readonly<Comment>): ArticleComment => ({
     authorUsername: comment.data.authorNickName,
     content: comment.data.content,
     createdAt: comment.data.createdAt,

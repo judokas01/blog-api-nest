@@ -1,18 +1,15 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql'
 
 @ObjectType({ description: 'The article model' })
-export class Article {
+export class ArticleListItem {
     @Field(() => ID)
     id: string
 
-    @Field({ description: 'The title of the article' })
-    title: string
-
-    @Field()
-    content: string
-
     @Field()
     perex: string
+
+    @Field()
+    title: string
 
     @Field()
     createdAt: Date
@@ -23,26 +20,13 @@ export class Article {
     @Field(() => [ArticleComment], { nullable: true })
     comments: ArticleComment[]
 }
-
 @ObjectType({ description: 'The article model' })
-export class ArticleListItem {
-    @Field(() => ID)
-    id: string
-
-    @Field({ description: 'The title of the article' })
-    title: string
-
+export class Article extends ArticleListItem {
     @Field()
     content: string
 
-    @Field()
-    perex: string
-
-    @Field()
-    createdAt: Date
-
-    @Field()
-    authorUsername: string
+    @Field(() => [ArticleComment], { nullable: true })
+    comments: ArticleComment[]
 }
 
 @ObjectType({ description: 'The article comment' })
