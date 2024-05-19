@@ -13,7 +13,7 @@ export const validateCreateCommentInput = (input: unknown) => {
     } catch (error) {
         if (error instanceof ZodError) {
             throw new InputError({
-                message: 'Invalid login input.',
+                message: 'Invalid create comment input.',
                 payload: { issues: error.issues },
             })
         }

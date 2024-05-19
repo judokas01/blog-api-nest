@@ -146,14 +146,13 @@ export class ArticleController {
         @Body() { articleId, content }: CreateCommentRequest,
         @Req() req: Request,
     ): Promise<RestArticle> {
-        console.log('this')
         const user = await this.authenticate(req)
 
         const article = await this.createCommentUseCase.create({ articleId, content }, user)
         return toArticleResponse(article)
     }
 
-    @Post('/comment/:id')
+    @Put('/comment/:id')
     @ApiOkResponse({
         description: 'The user records',
         type: RestArticle,

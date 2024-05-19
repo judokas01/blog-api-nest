@@ -12,7 +12,7 @@ export const validateGetManyArticlesInput = (input: unknown) => {
     } catch (error) {
         if (error instanceof ZodError) {
             throw new InputError({
-                message: 'Invalid login input.',
+                message: 'Invalid filter input.',
                 payload: { issues: error.issues },
             })
         }

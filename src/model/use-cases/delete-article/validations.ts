@@ -9,7 +9,7 @@ export const validateDeleteArticleInput = (input: unknown) => {
     } catch (error) {
         if (error instanceof ZodError) {
             throw new InputError({
-                message: 'Invalid login input.',
+                message: 'Invalid id.',
                 payload: { issues: error.issues },
             })
         }

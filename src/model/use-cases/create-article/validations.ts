@@ -9,7 +9,7 @@ export const validateCreateArticleInput = (input: unknown) => {
     } catch (error) {
         if (error instanceof ZodError) {
             throw new InputError({
-                message: 'Invalid login input.',
+                message: 'Invalid create article input.',
                 payload: { issues: error.issues },
             })
         }
@@ -18,8 +18,10 @@ export const validateCreateArticleInput = (input: unknown) => {
     }
 }
 
-const createSchema = z.object({
-    content: z.string(),
-    perex: z.string(),
-    title: z.string(),
-})
+const createSchema = z
+    .object({
+        content: z.string(),
+        perex: z.string(),
+        title: z.string(),
+    })
+    .strict()

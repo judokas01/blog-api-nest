@@ -4,7 +4,7 @@ import { CommentData } from '@root/model/entities/comment'
 
 export const validateVoteOnComment = (input: unknown) => {
     try {
-        const { commentId, ip, vote } = createSchema.parse(input)
+        const { commentId, ip, vote } = voteOnSchema.parse(input)
         return { commentId, ip, vote } satisfies {
             commentId: CommentData['id']
             vote: 1 | -1
@@ -13,7 +13,7 @@ export const validateVoteOnComment = (input: unknown) => {
     } catch (error) {
         if (error instanceof ZodError) {
             throw new InputError({
-                message: 'Invalid login input.',
+                message: 'Invalid comment vote input.',
                 payload: { issues: error.issues },
             })
         }
@@ -22,7 +22,7 @@ export const validateVoteOnComment = (input: unknown) => {
     }
 }
 
-const createSchema = z.object({
+const voteOnSchema = z.object({
     commentId: z.string(),
     ip: z.string(),
     vote: z.union([z.literal(1), z.literal(-1)]),

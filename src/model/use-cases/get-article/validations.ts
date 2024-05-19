@@ -9,7 +9,7 @@ export const validateGetIdInput = (input: unknown) => {
     } catch (error) {
         if (error instanceof ZodError) {
             throw new InputError({
-                message: 'Invalid login input.',
+                message: 'Invalid Id.',
                 payload: { issues: error.issues },
             })
         }

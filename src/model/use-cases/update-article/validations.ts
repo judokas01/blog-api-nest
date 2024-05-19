@@ -12,7 +12,7 @@ export const validateUpdateArticleInput = (input: unknown) => {
     } catch (error) {
         if (error instanceof ZodError) {
             throw new InputError({
-                message: 'Invalid login input.',
+                message: 'Invalid update article input.',
                 payload: { issues: error.issues },
             })
         }
