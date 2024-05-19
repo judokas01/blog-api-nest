@@ -5,7 +5,7 @@ import { CommentData } from '@root/model/entities/comment'
 export const validateVoteOnComment = (input: unknown) => {
     try {
         const { commentId, ip, vote } = createSchema.parse(input)
-        return { commentId, ip, vote: additionalValueValidation(vote) } satisfies {
+        return { commentId, ip, vote } satisfies {
             commentId: CommentData['id']
             vote: 1 | -1
             ip: string
@@ -25,10 +25,5 @@ export const validateVoteOnComment = (input: unknown) => {
 const createSchema = z.object({
     commentId: z.string(),
     ip: z.string(),
-    vote: z.number().max(1).min(-1),
+    vote: z.union([z.literal(1), z.literal(-1)]),
 })
-
-const additionalValueValidation = (vote: number) => {
-    if (vote === 1 || vote === -1) return vote
-    throw new InputError({ message: 'Invalid vote value', payload: { vote } })
-}
