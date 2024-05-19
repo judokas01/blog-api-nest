@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common'
+import { validateCreateCommentInput } from './validations'
 import { Article } from '@root/model/entities/article'
 import { CommentData, Comment } from '@root/model/entities/comment'
 import { HasOne } from '@root/model/entities/helpers/relationship'
@@ -18,19 +19,20 @@ export class CreateCommentUseCase {
         args: { content: CommentData['content']; articleId: Article['id'] },
         user: User | null,
     ): Promise<Article> => {
-        const article = await this.articleRepository.findById(args.articleId)
+        const { articleId, content } = validateCreateCommentInput(args)
+        const article = await this.articleRepository.findById(articleId)
 
         if (!article) {
             throw new InputError({
                 message: 'Article not found.',
-                payload: { articleId: args.articleId },
+                payload: { articleId: articleId },
             })
         }
 
         const commentToCreate = Comment.create({
             article: HasOne.loaded('comment.article', article),
             authorNickName: user?.data.username ?? 'Anonymous',
-            content: args.content,
+            content: content,
             uniqueVoteHosts: [],
         })
 

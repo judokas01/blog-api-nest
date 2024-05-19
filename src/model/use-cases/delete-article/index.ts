@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common'
+import { validateDeleteArticleInput } from './validations'
 import { Article } from '@root/model/entities/article'
 import { User } from '@root/model/entities/user'
 import { InputError, UnauthorizedError } from '@root/model/errors'
@@ -13,7 +14,9 @@ export class DeleteArticleUseCase {
             throw new UnauthorizedError({ message: 'Invalid user.' })
         }
 
-        const originalArticle = await this.articleRepository.findById(id)
+        const validatedId = validateDeleteArticleInput(id)
+
+        const originalArticle = await this.articleRepository.findById(validatedId)
         if (!originalArticle) {
             throw new InputError({
                 message: 'Article not found',
@@ -33,6 +36,6 @@ export class DeleteArticleUseCase {
             })
         }
 
-        await this.articleRepository.deleteOne(id)
+        await this.articleRepository.deleteOne(validatedId)
     }
 }

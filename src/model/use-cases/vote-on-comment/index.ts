@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common'
+import { validateVoteOnComment } from './validations'
 import { Article } from '@root/model/entities/article'
 import { CommentData } from '@root/model/entities/comment'
 import { InputError, InputNotFoundError, UnexpectedError } from '@root/model/errors'
@@ -17,20 +18,21 @@ export class VoteOnCommentUseCase {
         vote: 1 | -1
         ip: string
     }): Promise<Article> => {
-        const existingComment = await this.commentRepository.findById(args.commentId)
+        const { commentId, vote, ip } = validateVoteOnComment(args)
+
+        const existingComment = await this.commentRepository.findById(commentId)
         if (!existingComment) {
             throw new InputNotFoundError({
                 message: 'Comment not found',
-                payload: { commentId: args.commentId },
+                payload: { commentId: commentId },
             })
         }
 
-        if (existingComment.isIpPresent(args.ip)) {
+        if (existingComment.isIpPresent(ip)) {
             throw new InputError({ message: 'You have already voted on this comment' })
         }
 
-        const updated =
-            args.vote === -1 ? existingComment.downVote(args.ip) : existingComment.upVote(args.ip)
+        const updated = vote === -1 ? existingComment.downVote(ip) : existingComment.upVote(ip)
 
         await this.commentRepository.updateOne(updated.id, {
             uniqueVoteHosts: updated.data.uniqueVoteHosts,

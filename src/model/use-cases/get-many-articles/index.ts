@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common'
+import { validateGetManyArticlesInput } from './validations'
 import { Article } from '@root/model/entities/article'
 import {
     ArticleRepository,
@@ -9,6 +10,9 @@ import {
 export class GetManyArticlesUseCase {
     constructor(private articleRepository: ArticleRepository) {}
 
-    get = async (args: FindManyArticlesArgs): Promise<Article[]> =>
-        await this.articleRepository.findMany(args)
+    get = async (args: FindManyArticlesArgs): Promise<Article[]> => {
+        const validatedArgs = validateGetManyArticlesInput(args)
+
+        return await this.articleRepository.findMany(validatedArgs)
+    }
 }
