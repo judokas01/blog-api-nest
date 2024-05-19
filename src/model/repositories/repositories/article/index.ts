@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { ClearableRepository } from '../../common'
-import { toArticle, toPrismaArticleCreate, toPrismaArticleUpdate } from './mappers'
+import { toArticle } from '../../common/mappers'
+import { toPrismaArticleCreate, toPrismaArticleUpdate } from './mappers'
 import { Article, ArticleData } from '@root/model/entities/article'
-import { User } from '@root/model/entities/user'
 import { PrismaService } from '@root/infrastructure/prisma/client'
 import { Immutable } from '@root/model/lib/typescript'
 
@@ -12,7 +12,13 @@ export class ArticleRepository implements ClearableRepository {
 
     insertOne = async (data: Immutable<ArticleData>): Promise<Article> => {
         try {
-            const created = await this.prisma.article.create({ data: toPrismaArticleCreate(data) })
+            const created = await this.prisma.article.create({
+                data: toPrismaArticleCreate(data),
+                include: {
+                    author: true,
+                    comments: true,
+                },
+            })
             return toArticle(created)
         } catch (error) {
             console.error(error)
@@ -24,7 +30,13 @@ export class ArticleRepository implements ClearableRepository {
         articleId: Article['id'],
         update: Partial<Pick<ArticleData, 'content' | 'perex' | 'title'>>,
     ): Promise<Article> => {
-        const updated = await this.prisma.article.update(toPrismaArticleUpdate(articleId, update))
+        const updated = await this.prisma.article.update({
+            ...toPrismaArticleUpdate(articleId, update),
+            include: {
+                author: true,
+                comments: true,
+            },
+        })
         return toArticle(updated)
     }
 
@@ -55,18 +67,22 @@ export class ArticleRepository implements ClearableRepository {
             orderBy: {
                 pk: 'desc',
             },
+            include: {
+                author: true,
+            },
         })
         return found.map(toArticle)
     }
 
     findById = async (id: Article['id']): Promise<Article | null> => {
-        const found = await this.prisma.article.findFirst({ where: { id } })
+        const found = await this.prisma.article.findFirst({
+            where: { id },
+            include: {
+                author: true,
+                comments: true,
+            },
+        })
         return found ? toArticle(found) : null
-    }
-
-    findManyByUserId = async (userId: User['id']): Promise<Article[]> => {
-        const found = await this.prisma.article.findMany({ where: { authorId: userId } })
-        return found.map(toArticle)
     }
 
     clear = async (): Promise<void> => {

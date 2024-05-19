@@ -1,16 +1,6 @@
-import { Prisma, User as PrismaUser } from '@prisma/client'
-import { HasMany } from '@root/model/entities/helpers/relationship'
+import { Prisma } from '@prisma/client'
 import { User, UserData } from '@root/model/entities/user'
 import { Immutable } from '@root/model/lib/typescript'
-
-export const toUser = (user: PrismaUser): User =>
-    new User({
-        articles: HasMany.unloaded('user.articles'),
-        email: user.email,
-        id: user.id,
-        username: user.username,
-        password: user.password,
-    })
 
 export const toPrismaUserCreate = (data: Immutable<UserData>): Prisma.UserCreateInput => ({
     email: data.email,

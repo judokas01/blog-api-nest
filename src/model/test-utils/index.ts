@@ -15,6 +15,7 @@ export const getTestingModule = async (overrides?: { additionalProviders?: Provi
         providers: [...REPOSITORIES, ...REPOSITORY_DEPS, ...(overrides?.additionalProviders ?? [])],
         imports: [JwtMod],
     }).compile()
+
     return {
         testingApp,
         repositories: {
@@ -36,3 +37,5 @@ export const cleanDatabase = async (testingApp: TestingModule | INestApplication
         await repository.clear()
     }
 }
+
+export type TestingApp = Awaited<ReturnType<typeof getTestingModule>>

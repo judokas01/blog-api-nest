@@ -31,7 +31,7 @@ model Article {
   createdAt DateTime  @default(now())
   author    User      @relation(fields: [authorId], references: [id])
   authorId  String
-  Comment   Comment[]
+  comments   Comment[]
 }
 
 model Comment {

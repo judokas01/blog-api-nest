@@ -1,11 +1,11 @@
 import { ZodError, z } from 'zod'
+import type { CreateArticleData } from '.'
 import { InputError, UnexpectedError } from '@root/model/errors'
-import { ArticleData } from '@root/model/entities/article'
 
 export const validateCreateArticleInput = (input: unknown) => {
     try {
         const { content, perex, title } = createSchema.parse(input)
-        return { content, perex, title } satisfies Pick<ArticleData, 'content' | 'perex' | 'title'>
+        return { content, perex, title } satisfies CreateArticleData
     } catch (error) {
         if (error instanceof ZodError) {
             throw new InputError({

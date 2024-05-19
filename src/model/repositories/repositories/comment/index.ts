@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { ClearableRepository } from '../../common'
-import { toComment, toPrismaCommentCreate } from './mappers'
+import { toComment } from '../../common/mappers'
+import { toPrismaCommentCreate } from './mappers'
 import { PrismaService } from '@root/infrastructure/prisma/client'
 import { Immutable } from '@root/model/lib/typescript'
 import { Comment, CommentData } from '@root/model/entities/comment'
@@ -18,11 +19,11 @@ export class CommentRepository implements ClearableRepository {
     }
 
     findById = async (id: Comment['id']): Promise<Comment | null> => {
-        const created = await this.prisma.comment.findFirst({
+        const found = await this.prisma.comment.findFirst({
             where: { id },
         })
 
-        return created ? toComment(created) : null
+        return found ? toComment(found) : null
     }
 
     updateOne = async (

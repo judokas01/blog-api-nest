@@ -10,7 +10,7 @@ import { ArticleRepository } from '@root/model/repositories/repositories/article
 export class CreateArticleUseCase {
     constructor(private articleRepository: ArticleRepository) {}
 
-    create = async (data: Pick<ArticleData, 'content' | 'perex' | 'title'>, user: User | null) => {
+    create = async (data: CreateArticleData, user: User | null) => {
         const { content, perex, title } = validateCreateArticleInput(data)
         if (!user) {
             throw new UnauthorizedError({ message: 'Invalid user.' })
@@ -21,9 +21,11 @@ export class CreateArticleUseCase {
             perex,
             title,
             author: HasOne.loaded('article.author', user),
-            comments: HasMany.loaded('article.comments', []),
+            comments: HasMany.unloaded('article.comments'),
         })
 
         return await this.articleRepository.insertOne(articleToCreate.data)
     }
 }
+
+export type CreateArticleData = Pick<ArticleData, 'content' | 'perex' | 'title'>
