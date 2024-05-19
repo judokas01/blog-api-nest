@@ -21,8 +21,11 @@
     "prisma:gen": "yarn prisma generate",
     "migrate:latest": "prisma migrate deploy",
     "migrate:deploy": "yarn _with-deploy-env prisma migrate deploy",
+    "seed:test": "yarn _with-test-env ts-node ./src/scripts/seed.ts",
+    "seed:dev": "yarn _with-local-env ts-node -r tsconfig-paths/register ./src/scripts/seed.ts",
+    "seed:prod": "yarn _with-deploy-env ts-node ./src/scripts/seed.ts",
     "_with-test-env": "yarn env-cmd -f .env.test --silent",
-    "_with-local-env": "yarn env-cmd -f .env.test --silent",
+    "_with-local-env": "yarn env-cmd -f .env --silent",
     "_with-deploy-env": "yarn env-cmd -f .env.deploy --silent"
   },
   "prisma": {
