@@ -31,7 +31,7 @@ export class AuthenticateUserService {
         }
     }
 
-    async getUserFromToken(token: string | undefined): Promise<User | null> {
+    getUserFromToken = async (token?: string): Promise<User | null> => {
         if (!token) {
             return null
         }
