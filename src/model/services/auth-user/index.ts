@@ -27,7 +27,7 @@ export class AuthenticateUserService {
 
         const payload = { sub: user.id, username: user.data.username, email: user.data.email }
         return {
-            access_token: await this.jwtService.signAsync(payload),
+            accessToken: await this.jwtService.signAsync(payload),
         }
     }
 
@@ -74,7 +74,7 @@ export class AuthenticateUserService {
         }
         return {
             user: createUser,
-            access_token: await this.jwtService.signAsync(payload),
+            accessToken: await this.jwtService.signAsync(payload),
         }
     }
 
