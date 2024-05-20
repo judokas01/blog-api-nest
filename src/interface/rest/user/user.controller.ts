@@ -3,7 +3,7 @@ import { ApiOkResponse, ApiOperation } from '@nestjs/swagger'
 import { Response } from 'express'
 import { HttpExceptionFilter } from '../error-handler'
 import { AuthToken, SingInResponse, headerResponse, toUserRestResponse } from './response'
-import { LoginInput, RegisterInput } from './request'
+import { LoginRequest, RegisterRequest } from './request'
 import { AuthenticateUserService } from '@root/model/services/auth-user'
 
 @UseFilters(HttpExceptionFilter)
@@ -19,7 +19,7 @@ export class UserController {
         headers: headerResponse,
     })
     async login(
-        @Body() loginBody: LoginInput,
+        @Body() loginBody: LoginRequest,
         @Res({ passthrough: true }) res: Response,
     ): Promise<AuthToken> {
         const { accessToken } = await this.authService.getAuthToken(loginBody)
@@ -37,7 +37,7 @@ export class UserController {
         headers: headerResponse,
     })
     async singIn(
-        @Body() registerBody: RegisterInput,
+        @Body() registerBody: RegisterRequest,
         @Res({ passthrough: true }) res: Response,
     ): Promise<SingInResponse> {
         const { accessToken, user } = await this.authService.createUser(registerBody)

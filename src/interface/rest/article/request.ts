@@ -1,25 +1,25 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 
-export class FindManyArticles {
-    @ApiProperty()
+export class FindManyArticlesRequest {
+    @ApiPropertyOptional()
     title?: string
 
-    @ApiProperty()
+    @ApiPropertyOptional()
     perex?: string
 
-    @ApiProperty()
+    @ApiPropertyOptional()
     authorUsername?: string
 
-    @ApiProperty()
+    @ApiPropertyOptional()
     createdBefore?: Date
 
-    @ApiProperty()
+    @ApiPropertyOptional()
     createdAfter?: Date
 
-    @ApiProperty()
+    @ApiPropertyOptional()
     limit?: number
 
-    @ApiProperty()
+    @ApiPropertyOptional()
     offset?: number
 }
 
@@ -35,13 +35,13 @@ export class CreateArticleRequest {
 }
 
 export class UpdateArticleRequest {
-    @ApiProperty()
+    @ApiPropertyOptional()
     title?: string
 
-    @ApiProperty()
+    @ApiPropertyOptional()
     perex?: string
 
-    @ApiProperty()
+    @ApiPropertyOptional()
     content?: string
 }
 

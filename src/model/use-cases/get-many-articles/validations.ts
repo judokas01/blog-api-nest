@@ -33,8 +33,8 @@ const getManySchema = z.object({
         .optional(),
     pagination: z
         .object({
-            limit: z.number(),
-            offset: z.number(),
+            limit: z.number().optional(),
+            offset: z.number().optional(),
         })
         .optional(),
 })

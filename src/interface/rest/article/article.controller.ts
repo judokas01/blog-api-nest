@@ -16,14 +16,13 @@ import { HttpExceptionFilter } from '../error-handler'
 import {
     ArticleListItem,
     DeleteArticleResponse,
-    ArticleListItem as RestArticle,
     toArticleItemResponse,
     toArticleResponse,
 } from './response'
 import {
     CreateArticleRequest,
     CreateCommentRequest,
-    FindManyArticles,
+    FindManyArticlesRequest,
     UpdateArticleRequest,
     VoteOnCommentRequest,
 } from './request'
@@ -57,7 +56,7 @@ export class ArticleController {
         description: 'The user records',
         type: [ArticleListItem],
     })
-    async getManyArticles(@Query() query: FindManyArticles): Promise<ArticleListItem[]> {
+    async getManyArticles(@Query() query: FindManyArticlesRequest): Promise<ArticleListItem[]> {
         const articles = await this.getManyArticlesUseCase.get({
             filters: {
                 authorUsername: query.authorUsername,
@@ -79,9 +78,9 @@ export class ArticleController {
     @ApiOperation({ summary: 'Get article by its id.' })
     @ApiOkResponse({
         description: 'The user records',
-        type: RestArticle,
+        type: ArticleListItem,
     })
-    async getArticleById(@Param('id') id: string): Promise<RestArticle> {
+    async getArticleById(@Param('id') id: string): Promise<ArticleListItem> {
         const article = await this.getArticleUseCase.getById(id)
         if (!article) {
             throw new InputNotFoundError({ message: 'Article not found', payload: { id } })
@@ -92,12 +91,12 @@ export class ArticleController {
     @Post('/article')
     @ApiOkResponse({
         description: 'The user records',
-        type: RestArticle,
+        type: ArticleListItem,
     })
     async createArticle(
         @Body() registerBody: CreateArticleRequest,
         @Req() req: Request,
-    ): Promise<RestArticle> {
+    ): Promise<ArticleListItem> {
         const user = await this.authenticate(req)
 
         const article = await this.createArticleUseCase.create(registerBody, user)
@@ -107,13 +106,13 @@ export class ArticleController {
     @Put('/article/:id')
     @ApiOkResponse({
         description: 'The user records',
-        type: RestArticle,
+        type: ArticleListItem,
     })
     async updateArticle(
         @Param('id') id: string,
         @Body() updateBody: UpdateArticleRequest,
         @Req() req: Request,
-    ): Promise<RestArticle> {
+    ): Promise<ArticleListItem> {
         const user = await this.authenticate(req)
         const article = await this.updateArticleUseCase.update(
             { articleId: id, update: updateBody },
@@ -140,12 +139,12 @@ export class ArticleController {
     @Post('/article/:id/comment')
     @ApiOkResponse({
         description: 'The user records',
-        type: RestArticle,
+        type: ArticleListItem,
     })
     async createComment(
         @Body() { articleId, content }: CreateCommentRequest,
         @Req() req: Request,
-    ): Promise<RestArticle> {
+    ): Promise<ArticleListItem> {
         const user = await this.authenticate(req)
 
         const article = await this.createCommentUseCase.create({ articleId, content }, user)
@@ -155,13 +154,13 @@ export class ArticleController {
     @Put('/comment/:id')
     @ApiOkResponse({
         description: 'The user records',
-        type: RestArticle,
+        type: ArticleListItem,
     })
     async updateComment(
         @Param('id') id: string,
         @Body() { vote }: VoteOnCommentRequest,
         @Req() req: Request,
-    ): Promise<RestArticle> {
+    ): Promise<ArticleListItem> {
         const article = await this.voteOnCommentUseCase.vote({ commentId: id, vote, ip: req.ip })
         return toArticleResponse(article)
     }
